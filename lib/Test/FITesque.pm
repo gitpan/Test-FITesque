@@ -16,11 +16,11 @@ Test::FITesque - the FITesque framework!
 
 =head1 VERSION
 
-Version 0.01_001 - Development release
+Version 0.01_002 - Development release
 
 =cut
 
-our $VERSION = '0.01_001';
+our $VERSION = '0.01_002';
 
 =head1 DESCRIPTION
 

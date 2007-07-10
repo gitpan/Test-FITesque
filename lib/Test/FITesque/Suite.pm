@@ -9,7 +9,7 @@ our $TEST_BUILDER;
 
 =head1 NAME
 
-Test::FITesque::Test - FITesque test suite runner
+Test::FITesque::Suite - FITesque test suite runner
 
 =head1 SYNOPSIS
 
