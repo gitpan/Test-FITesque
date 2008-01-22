@@ -1,6 +1,6 @@
 ---
 name: Test-FITesque
-version: 0.01_002
+version: 0.01
 author:
   - 'Scott McWhirter <konobi@cpan.org>'
 abstract: the FITesque framework!
@@ -17,7 +17,7 @@ build_requires:
 provides:
   Test::FITesque:
     file: lib/Test/FITesque.pm
-    version: 0.01_002
+    version: 0.01
   Test::FITesque::Fixture:
     file: lib/Test/FITesque/Fixture.pm
   Test::FITesque::Suite:

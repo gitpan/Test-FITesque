@@ -20,7 +20,7 @@ Version 0.01_002 - Development release
 
 =cut
 
-our $VERSION = '0.01_002';
+our $VERSION = '0.01';
 
 =head1 DESCRIPTION
 
@@ -255,6 +255,10 @@ Add some cookbook examples
 
 Look at some of the Fixture base class code to see if it can be restructured to
 allow for more evil coderef support.
+
+=item *
+
+Update code to take advantage of newer Test::Harness/Test::Builder features.
 
 =back
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 24;
 use Test::Exception;
 
 use lib 't/lib';
@@ -89,11 +89,11 @@ Attempting_to_use_non_existant_method: {
   my $test = Test::FITesque::Test->new();
   $test->add('Buddha::TestFixture');
   $test->add('non existant method');
-
+  
   throws_ok {
     $test->run_tests();
-  } qr{No method exists for 'non existant method'},
-    q{Non existant method};
+  } qr{Unable to run tests, no method available for action "non existant method"},
+    q{run_tests bails early on unavailable method};
 }
 
 Fixture_class_is_not_a_FITesque_fixture: {
@@ -138,4 +138,28 @@ Cannot_attempt_to_run_tests_twice: {
     $test->run_tests();
   } qr{Attempted to run test more than once},
     q{Cannot run test twice};
+}
+
+Fixture_objects_destroyed_after_run_tests: {
+
+  my $test = Test::FITesque::Test->new();
+  $test->add(q{Buddha::DestroyFixture});
+  $test->add(q{hehe});
+
+  ok(!defined $Buddha::DestroyFixture::DESTROY_HAS_RUN, q{Object created});
+  $test->run_tests();
+  is($Buddha::DestroyFixture::DESTROY_HAS_RUN, 1, q{DESTROY has run});
+}
+
+Make_sure_runtime_methods_are_available: {
+
+  my $test = Test::FITesque::Test->new();
+  $test->add(q{Buddha::CheckFixture});
+  $test->add(q{existing});
+  $test->add(q{non existing});
+
+  throws_ok {
+    $test->run_tests();
+  } qr{No method exists for 'non existing'},
+    q{Methods are available at runtime};
 }

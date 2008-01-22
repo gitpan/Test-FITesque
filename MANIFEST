@@ -20,6 +20,8 @@ t/kwalitee.t
 t/lib/Buddha/BadFixture.pm
 t/lib/Buddha/BadFixture2.pm
 t/lib/Buddha/BadFixture3.pm
+t/lib/Buddha/CheckFixture.pm
+t/lib/Buddha/DestroyFixture.pm
 t/lib/Buddha/FITesqueFixture.pm
 t/lib/Buddha/FITesqueFixture2.pm
 t/lib/Buddha/GoodFixture.pm

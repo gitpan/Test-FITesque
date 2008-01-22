@@ -117,10 +117,11 @@ sub run_tests {
   if(@$data){
     my ($fixture_class, @fixture_args) = $self->_load_fixture_class();
 
-    if(!defined $self->{fixture_object}){
-      @fixture_args = $fixture_class->parse_arguments(@fixture_args);
-      my $obj = $fixture_class->new(@fixture_args);
-      $self->{fixture_object} = $obj;
+    my $fixture_object;
+    if(!defined $self->{__test_has_run__}){
+      @fixture_args   = $fixture_class->parse_arguments(@fixture_args);
+      $fixture_object = $fixture_class->new(@fixture_args);
+      $self->{__test_has_run__} = 1;
     } else {
       die q{Attempted to run test more than once};
     }
@@ -131,15 +132,24 @@ sub run_tests {
       my $Builder = $TEST_BUILDER ? $TEST_BUILDER : Test::Builder->new();
       $Builder->exported_to(__PACKAGE__);
 
-      if( my $count =$self->test_count() ){
+      if( my $count = $self->test_count() ){
         $Builder->expected_tests($count);
       } else {
         $Builder->no_plan();
       }
     }
-    
-    my $fixture_object = $self->{fixture_object};
-    
+   
+    # early bail out in case of unavailable methods
+    # - We do this as a seperate step as the method called could take a long
+    #   time, which would mean that you'd only fail halfway through a long
+    #   test run.
+    for my $test_row (@$data[ 1..(scalar(@$data) -1) ]){
+      my $method_string = $test_row->[0];
+      if( !$fixture_object->parse_method_string($method_string) ){
+        die qq{Unable to run tests, no method available for action "$method_string"} 
+      }
+    }
+
     for my $test_row ( @$data[ 1..( scalar(@$data) -1) ]){
       my ($method_string, @args) = @$test_row;
       my $method = $fixture_object->parse_method_string($method_string);
