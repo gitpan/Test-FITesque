@@ -151,10 +151,13 @@ sub run_tests {
     }
 
     for my $test_row ( @$data[ 1..( scalar(@$data) -1) ]){
+      my $Builder = $TEST_BUILDER ? $TEST_BUILDER : Test::Builder->new();
       my ($method_string, @args) = @$test_row;
       my $method = $fixture_object->parse_method_string($method_string);
       die "No method exists for '$method_string'" if !defined $method;
 
+      my $test_count = $fixture_object->method_test_count($method_string) || 0;
+      $Builder->note( "running $method_string ($test_count tests)" );
       @args = $fixture_object->parse_arguments(@args);
       $fixture_object->$method(@args);
     }
@@ -173,7 +176,7 @@ sub _load_fixture_class {
   eval {
     load $class;
   };
-  die qq{Could not load '$class' fixture} if $@;
+  die qq{Could not load '$class' fixture: $@} if $@;
   die qq{Fixture class '$class' is not a FITesque fixture} 
     if !$class->isa(q{Test::FITesque::Fixture});
 
